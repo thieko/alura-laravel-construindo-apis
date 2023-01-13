@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/series',function(){
+/*Route::get('/series',function(){
     return \App\Models\Serie::all();
-});
+});*/
+//Route::resource();
+Route::apiResource('/series',\App\Http\Controllers\Api\SerieController);
