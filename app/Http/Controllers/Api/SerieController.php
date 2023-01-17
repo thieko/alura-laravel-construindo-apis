@@ -8,18 +8,29 @@ use Illuminate\Http\Request;
 
 class SerieController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Serie::all(); 
+        $query = Serie::query();
+        if(!$request->has('nome')){
+            $query->where('nome', $request->nome);
+        }
+        return $query->paginate(1);
     }
     public function store(Request $request)
     {
         return response()
             ->json(Serie::create($request->all()), 201);
     }
-    public function show(Serie $series)
+    public function show(int $series)
     {
-        return $series;
+        $seriesModel = Serie::find($series);
+        
+        if($seriesModel=== null){
+            return response()
+            ->json(['message'=>'Series not found'],404);
+        }
+
+        return $seriesModel;
     }
     public function update(Serie $series, Request $request)
     {
