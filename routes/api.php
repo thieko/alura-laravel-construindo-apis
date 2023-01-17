@@ -21,4 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return \App\Models\Serie::all();
 });*/
 //Route::resource();
-Route::apiResource('/series',\App\Http\Controllers\Api\SerieController);
+Route::apiResource('/series', \App\Http\Controllers\Api\SerieController::class);
