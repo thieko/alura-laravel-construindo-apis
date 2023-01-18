@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesFormRequest;
 use App\Jobs\DeleteSeriesCover;
 use App\Models\Serie;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
 class SerieController extends Controller
@@ -39,9 +40,11 @@ class SerieController extends Controller
 
         return $series;
     }
-    public function destroy(int $series)
+    public function destroy(int $series,Authenticatable $user)
     {
-        Serie::destroy($series);
+        if (!$user->tokenCan('is_admin')) {
+            Serie::destroy($series);
+        }
         return response()->noContent();
     }
 }

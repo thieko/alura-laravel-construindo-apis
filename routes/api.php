@@ -21,4 +21,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return \App\Models\Serie::all();
 });*/
 //Route::resource();
-Route::apiResource('/series', \App\Http\Controllers\Api\SerieController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('/series', \App\Http\Controllers\Api\SerieController::class);
+});
+
+Route::post('/login', function (Request $request) {
+    $credentials = $request->only(['email','password']);
+    $user = \App\Models\User::whereEmail($credentials['email'])->first();
+    if(Auth::attempt($credentials)===false){
+        return response()->json('Unauthorized',401);
+    }
+    $user = Auth::User();
+    $user->tokens()->delete();
+    $token = $user->createToken('token',['is_admin']);
+    return response()->json($token->plainTextToken);
+});
